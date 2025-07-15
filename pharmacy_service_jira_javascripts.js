@@ -1,13 +1,3 @@
-// ==UserScript==
-// @name        New script
-// @namespace   Violentmonkey Scripts
-// @match       https://*.atlassian.net/*
-// @grant       none
-// @version     1.0
-// @author      -
-// @description 14.07.2025 09:26:57
-// ==/UserScript==
-
 (function() {
   'use strict';
 
