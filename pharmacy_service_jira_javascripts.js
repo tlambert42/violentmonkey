@@ -224,7 +224,7 @@
 
   function GlobalFunction() {
     const panelSelector = '[data-testid="issue.views.issue-details.issue-layout.right-most-column"] ._1gqnidpf'; // ← adapte ce sélecteur si nécessaire
-
+alert('TEST 2');
     const observer = new MutationObserver((mutations, obs) => {
       const panel = document.querySelector(panelSelector);
 
