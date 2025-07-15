@@ -57,6 +57,7 @@
 
   // === JS intégré ===
   function onUrlChange(callback) {
+	  alert('sssss');
     let currentUrl = location.href;
     const observer = new MutationObserver(() => {
       if (location.href !== currentUrl) {
