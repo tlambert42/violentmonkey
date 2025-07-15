@@ -58,7 +58,7 @@ div._ca0qutpp._u5f3utpp._n3tdutpp._19bvutpp._7myae4h9._1sw7nqa1._qgnumuej {
 /* Menu droite */
 /* A FAIRE */
 ._4t3i1ris{
-  background-color:RED;
+  background-color:#E9F2FE;
 }
 ._2hwxyrq6{
   background-color:#E9F2FE;
