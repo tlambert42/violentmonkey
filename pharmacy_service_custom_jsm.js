@@ -3,7 +3,7 @@
 // @namespace    Violentmonkey Scripts
 // @match        https://galenica.atlassian.net/*
 // @grant        GM_addStyle
-// @version      1.1
+// @version      1.2
 // @description  Intégration locale JS + CSS - 15.07.2025
 // ==/UserScript==
 
