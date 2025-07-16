@@ -3,7 +3,7 @@
 // @namespace    Violentmonkey Scripts
 // @match        https://galenica.atlassian.net/*
 // @grant        GM_addStyle
-// @version      1.6
+// @version      1.6.1
 // @updateURL    https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @downloadURL  https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @description  Intégration locale JS + CSS - 15.07.2025
@@ -61,7 +61,7 @@ div._ca0qutpp._u5f3utpp._n3tdutpp._19bvutpp._7myae4h9._1sw7nqa1._qgnumuej {
   display:none;
 }
 /* Menu droite */
-/* A FAIRE */
+
 ._4t3i1ris{
   background-color:#E9F2FE;
 }
@@ -78,9 +78,6 @@ div._ca0qutpp._u5f3utpp._n3tdutpp._19bvutpp._7myae4h9._1sw7nqa1._qgnumuej {
 }
 .css-38ytem h2{
   color:#fff;
-}
-._16qs1pcf{
-  background-color: #1868DB;
 }
 ._16qs1pcf button .css-178ag6o{
   color: #fff;
