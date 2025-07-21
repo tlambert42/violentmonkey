@@ -3,12 +3,11 @@
 // @namespace    Violentmonkey Scripts
 // @match        https://galenica.atlassian.net/*
 // @grant        GM_addStyle
-// @version      1.6.4
+// @version      1.6.5
 // @updateURL    https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @downloadURL  https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @description  Intégration locale JS + CSS - 15.07.2025
 // ==/UserScript==
-
 
 
 (function() {
@@ -136,6 +135,10 @@ div._ca0qutpp._u5f3utpp._n3tdutpp._19bvutpp._7myae4h9._1sw7nqa1._qgnumuej {
 /*======================================
 	Contenu
 ======================================*/
+
+._ca0qxy5q{
+  padding-top:0px !important;
+}
 
 /*======================================
 	Menu de droite
@@ -310,20 +313,6 @@ function customContent(){
     }
   }
 
-
-
-  //Bouton automatisation
-  const clipped = document.querySelector('.css-1b1skvc ._ogto7mnp');
-  if (clipped) {
-    clipped.style.setProperty('clip', 'auto', 'important');
-    clipped.style.setProperty('clip-path', 'none', 'important');
-    clipped.style.setProperty('font-size', '14px', 'important');
-    clipped.style.setProperty('line-height', 'normal', 'important');
-    clipped.style.setProperty('overflow', 'visible', 'important');
-    clipped.style.setProperty('color', '#fff', 'important');
-    clipped.style.setProperty('margin-left', '20px', 'important');
-  }
-
 }
 /*=================================================================================
 	Customisation du Menu de droite
@@ -343,6 +332,7 @@ function customRightMenu(){
       CheckCustomerExpander();
       OpenCustomerExpander();
       AddLinkToPhoneNumber();
+
       // Une fois trouvé, on peut arrêter l'observation si ce n'est plus nécessaire
       obsRightPanel.disconnect();
     }
@@ -354,8 +344,13 @@ function customRightMenu(){
       subtree: true
     });
 
-  // Masquage du bouton de vote
+  customRightMenuHideElements();
 
+}
+
+function customRightMenuHideElements(){
+
+  // Masquage du bouton de vote
 
   const elementsVote = document.querySelectorAll('div._1n1uewfl._nz6rewfl');
   if (elementsVote.length > 1) {
@@ -400,29 +395,24 @@ function customRightMenu(){
 
   //sous-titre en gras
 
-
   const targetElementBold = document.querySelector('[data-component-selector="jira-issue-field-heading-field-heading-title"]');
   if (targetElementBold) {
 
-
-
-  const styleBold = document.createElement('style');
-  styleBold.innerHTML = `[data-component-selector="jira-issue-field-heading-field-heading-title"] {
-      font-weight: 700 !important;
-    }
-  `;
-  document.head.appendChild(style);
+    const styleBold = document.createElement('style');
+    styleBold.innerHTML = `[data-component-selector="jira-issue-field-heading-field-heading-title"] {
+        font-weight: 700 !important;
+      }
+    `;
+    document.head.appendChild(style);
 
   }
 
   // bouton de changement de status
 
-  const buttonChangeStatus = document.querySelector('#issue\\.fields\\.status-view\\.status-button');
-  if (buttonChangeStatus) {
-    buttonChangeStatus.style.setProperty('width', '313px', 'important');
-    buttonChangeStatus.style.setProperty('height', '43px', 'important');
-    buttonChangeStatus.style.setProperty('box-shadow', '0px 2px 3px #666', 'important');
-  }
+  waitForStatusButton();
+
+
+
 
   // affichage du status centré
 
@@ -437,49 +427,97 @@ function customRightMenu(){
 
   //bouton automatisation
 
-  const buttonAutomatisation = document.querySelector('[data-testid="issue.views.issue-base.foundation.status.actions-wrapper"] div.css-1b1skvc');
+  waitForAutomatisationButton();
 
-  if (buttonAutomatisation) {
-      buttonAutomatisation.style.setProperty('background-color', '#312880', 'important');
-      buttonAutomatisation.style.setProperty('color', '#fff', 'important');
-      buttonAutomatisation.style.setProperty('border-radius', '5px', 'important');
-      buttonAutomatisation.style.setProperty('width', '313px', 'important');
-      buttonAutomatisation.style.setProperty('height', '43px', 'important');
-      buttonAutomatisation.style.setProperty('padding-top', '5px', 'important');
-      buttonAutomatisation.style.setProperty('padding-left', '5px', 'important');
-      buttonAutomatisation.style.setProperty('box-shadow', '0px 2px 3px #666', 'important');
-
-  }
-
-  const svgIcon = document.querySelector('div.css-1b1skvc svg path');
-  if (svgIcon) {
-      svgIcon.style.setProperty('fill', '#fff', 'important');
-  }
-
-  //ajouter le texte automatisation après l'icone
-
-  const svgAutomatisation = document.querySelector('div.css-1b1skvc svg');
-  if (svgAutomatisation) {
-      // Vérifie s'il y a déjà un texte pour éviter les doublons
-      const existingText = svgAutomatisation.parentElement.querySelector('.automatisation-text');
-      if (!existingText) {
-
-          const span = document.createElement('span');
-          span.textContent = ' Automatisation';
-          span.className = 'automatisation-text';
-          span.style.setProperty('margin-left', '6px', 'important');
-          span.style.setProperty('font-weight', 'bold', 'important');
-        span.style.setProperty('color', '#fff', 'important');
-          svgAutomatisation.parentElement.appendChild(span);
-      }
-  }
 
 
 
   waitForButtonLinkedTickets();
 
-
 }
+
+
+function waitForStatusButton() {
+
+  //fonction pour modifier le bouton de status
+  const observer = new MutationObserver(() => {
+    const button = document.querySelector('#issue\\.fields\\.status-view\\.status-button');
+    if (button) {
+      //console.log('✅ Bouton trouvé');
+      button.style.setProperty('width', '313px', 'important');
+      button.style.setProperty('height', '43px', 'important');
+      button.style.setProperty('box-shadow', '0px 2px 3px #666', 'important');
+      observer.disconnect(); // Arrête l'observation une fois trouvé
+    }
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+}
+
+function waitForAutomatisationButton() {
+  const observer = new MutationObserver(() => {
+    const button = document.querySelector('[data-testid="issue.views.issue-base.foundation.status.actions-wrapper"] div.css-1b1skvc');
+    if (!button) return;
+
+    //console.log('✅ Bouton trouvé');
+
+    // Appliquer les styles
+    button.style.setProperty('background-color', '#312880', 'important');
+    button.style.setProperty('color', '#fff', 'important');
+    button.style.setProperty('border-radius', '5px', 'important');
+    button.style.setProperty('width', '313px', 'important');
+    button.style.setProperty('height', '43px', 'important');
+    button.style.setProperty('padding-top', '5px', 'important');
+    button.style.setProperty('padding-left', '5px', 'important');
+    button.style.setProperty('box-shadow', '0px 2px 3px #666', 'important');
+
+    // Icône SVG
+    const svgIcon = button.querySelector('svg path');
+    if (svgIcon) {
+      svgIcon.style.setProperty('fill', '#fff', 'important');
+    }
+
+    // Ajouter le texte "Automatisation"
+    const svgAutomatisation = button.querySelector('svg');
+    if (svgAutomatisation) {
+      const existingText = svgAutomatisation.parentElement.querySelector('.automatisation-text');
+      if (!existingText) {
+        const span = document.createElement('span');
+        span.textContent = ' Automatisation';
+        span.className = 'automatisation-text';
+        span.style.setProperty('margin-left', '6px', 'important');
+        span.style.setProperty('font-weight', 'bold', 'important');
+        span.style.setProperty('color', '#fff', 'important');
+        svgAutomatisation.parentElement.appendChild(span);
+      }
+    }
+
+    //Bouton automatisation
+    const clipped = document.querySelector('.css-1b1skvc ._ogto7mnp');
+    if (clipped) {
+      clipped.style.setProperty('clip', 'auto', 'important');
+      clipped.style.setProperty('clip-path', 'none', 'important');
+      clipped.style.setProperty('font-size', '14px', 'important');
+      clipped.style.setProperty('line-height', 'normal', 'important');
+      clipped.style.setProperty('overflow', 'visible', 'important');
+      clipped.style.setProperty('color', '#fff', 'important');
+      clipped.style.setProperty('margin-left', '20px', 'important');
+    }
+
+    observer.disconnect(); // Arrêter l'observation
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+}
+
+
+
 
 /*=================================================================================
 	Fonctions
@@ -703,3 +741,4 @@ function CheckCustomerExpander(){
 	FIN
 =================================================================================*/
 })();
+
