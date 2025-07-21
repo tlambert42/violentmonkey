@@ -3,12 +3,11 @@
 // @namespace    Violentmonkey Scripts
 // @match        https://galenica.atlassian.net/*
 // @grant        GM_addStyle
-// @version      1.6.5
+// @version      1.6.6
 // @updateURL    https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @downloadURL  https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @description  Intégration locale JS + CSS - 15.07.2025
 // ==/UserScript==
-
 
 (function() {
 
@@ -294,7 +293,6 @@ function customLeftMenu() {
 function customContent(){
   //console.log('customContent');
 
-
   //Bouton tempo
   const ecosystemWrapper = document.querySelector('[data-testid="issue-view-ecosystem.ecosystem-actions-wrapper"]');
   if (ecosystemWrapper) {
@@ -308,12 +306,16 @@ function customContent(){
   if (confluenceButton) {
     const buttonWrapperConfluence = confluenceButton.closest('button');
     if (buttonWrapperConfluence) {
-      buttonWrapperConfluence.style.display = 'none';
-      //console.log('Bouton Confluence masqué');
+     // buttonWrapperConfluence.style.display = 'none';
+
+      buttonWrapperConfluence.style.setProperty('display', 'none', 'important');
+
+      console.log('Bouton Confluence masqué');
     }
   }
 
 }
+
 /*=================================================================================
 	Customisation du Menu de droite
 =================================================================================*/
@@ -332,6 +334,7 @@ function customRightMenu(){
       CheckCustomerExpander();
       OpenCustomerExpander();
       AddLinkToPhoneNumber();
+      HideElementWithDataTestID(ContentMenu_MenusToHide_DataTestID);
 
       // Une fois trouvé, on peut arrêter l'observation si ce n'est plus nécessaire
       obsRightPanel.disconnect();
@@ -541,9 +544,11 @@ function HideElementWithDataTestID(ElementsList) {
 	ElementsList.forEach(testId => {
 	const CardToHide = document.querySelector(`[data-testid="${testId}"]`);
 
-    console.log(CardToHide);
-    console.log(testId);
-		if (CardToHide && CardToHide.getAttribute('data-selected') === 'false') {
+    //console.log(CardToHide);
+    //console.log(testId);
+		//if (CardToHide && CardToHide.getAttribute('data-selected') === 'false') {
+    if (CardToHide) {
+
 			//CardToHide.remove(); // suppression au lieu de display: none
       CardToHide.style.setProperty('display', 'none', 'important');
 		}
@@ -741,4 +746,5 @@ function CheckCustomerExpander(){
 	FIN
 =================================================================================*/
 })();
+
 
