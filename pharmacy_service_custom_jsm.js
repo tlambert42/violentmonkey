@@ -3,11 +3,12 @@
 // @namespace    Violentmonkey Scripts
 // @match        https://galenica.atlassian.net/*
 // @grant        GM_addStyle
-// @version      1.6.3
+// @version      1.6.4
 // @updateURL    https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @downloadURL  https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @description  Intégration locale JS + CSS - 15.07.2025
 // ==/UserScript==
+
 
 
 (function() {
@@ -42,7 +43,7 @@ const LeftMenu_MenusToHide_DataTestID = [
         'NAV4_archived_work_items_JSMSP-container',  	// Archives JSMSP
         'NAV4_archived_work_items_INC-container',  	  // Archives INC
         'NAV4_proj-JSMSP-summary-container', 	        // Summary JSMSP
-        'NAV4_proj-INC-summary'                       // Summary INC
+        'NAV4_proj-INC-summary-container'             // Summary INC
 	];
  const ContentMenu_MenusToHide_DataTestID = [
         'issue-view-ecosystem.ecosystem-actions-wrapper' //Tempo
@@ -57,13 +58,17 @@ const LeftMenu_MenusToHide_URL = [
     "tempo-project-centric-timesheet-panel",          // Timesheet
     "ic-templates-page-checklist",                     //Checklist
     "jql-search-extensions-extended-search-project-settings" // Extended search
+
 	];
 const LeftMenu_MenusToHide_Name = [
 		'Ajouter un raccourci',
     'demandes de service',
     "Files d'attente",
     "Create issue from template",
-  "Canaux"
+    "Canaux",
+    "Leni Agent Help Space",
+    "Dashboard",
+    "Microsoft Teams Integration"
 	];
 /*=================================================================================
 	Fonction Globale
@@ -220,35 +225,23 @@ function customHeader(){
 /*=================================================================================
 	Customisation du Menu de gauche
 =================================================================================*/
-function customLeftMenu(){
-
-	// Afin de pouvoir masquer les menus, on doit détecter que le projet soit ouvert
-
-	const LeftMenuContainerSelector = '[data-testid="NAV4_proj_JSMSP-container"]';
+function customLeftMenu() {
+    const LeftMenuContainerSelectors = [
+        '[data-testid="NAV4_proj_JSMSP-container"]',
+        '[data-testid="NAV4_proj_INC-container"]'
+        // Ajoute ici d'autres sélecteurs si nécessaire
+    ];
 
     const LeftMenucheckButtonState = (button) => {
-
         const LeftMenuIsExpanded = button.getAttribute('aria-expanded') === 'true';
-        //console.log('État du bouton :', isExpanded ? 'Actif (ouvert)' : 'Inactif (fermé)');
-
-        if(LeftMenuIsExpanded) {
-
-          //console.log('on commence le masquage');
-
-          // On masque les menus non souhaités
-
-          HideElementWithDataTestID(LeftMenu_MenusToHide_DataTestID);
-          HideElementWithURL(LeftMenu_MenusToHide_URL);
-          HideElementWithName(LeftMenu_MenusToHide_Name);
-
-          //LeftMenuDomObserver.disconnect();
-
+        if (LeftMenuIsExpanded) {
+            HideElementWithDataTestID(LeftMenu_MenusToHide_DataTestID);
+            HideElementWithURL(LeftMenu_MenusToHide_URL);
+            HideElementWithName(LeftMenu_MenusToHide_Name);
         }
-
     };
 
     const LeftMenuObserveButton = (button) => {
-
         const LeftMenuObserver = new MutationObserver(() => {
             LeftMenucheckButtonState(button);
         });
@@ -258,22 +251,27 @@ function customLeftMenu(){
             attributeFilter: ['aria-expanded']
         });
 
-        // Vérifie l'état initial
         LeftMenucheckButtonState(button);
     };
 
     const LeftMenuFindAndObserve = () => {
+        for (const selector of LeftMenuContainerSelectors) {
+            const container = document.querySelector(selector);
 
-        const LeftMenuContainer = document.querySelector(LeftMenuContainerSelector);
-        if (LeftMenuContainer) {
-            const button = LeftMenuContainer.querySelector('button[aria-expanded]');
-            if (button) {
-                LeftMenuObserveButton(button);
+            if (container) {
+
+                const button = container.querySelector('button[aria-expanded]');
+
+                const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+                if (button) {
+                    LeftMenuObserveButton(button);
+                    //break;
+                }
             }
         }
     };
 
-    // Surveille le DOM pour détecter l'apparition du bouton
     const LeftMenuDomObserver = new MutationObserver(() => {
         LeftMenuFindAndObserve();
     });
@@ -283,12 +281,10 @@ function customLeftMenu(){
         subtree: true
     });
 
-    // Tentative initiale
     LeftMenuFindAndObserve();
-
-  hideRecentSection();
-
+    hideRecentSection();
 }
+
 /*=================================================================================
 	Customisation du Contenu
 =================================================================================*/
@@ -334,6 +330,8 @@ function customContent(){
 =================================================================================*/
 function customRightMenu(){
 	//console.log('customRightMenu');
+
+
   const panelSelectorRightPanel = '[data-testid="issue.views.issue-details.issue-layout.right-most-column"] ._1gqnidpf'; // ← adapte ce sélecteur si nécessaire
 
   const observerRightPanel = new MutationObserver((mutations, obsRightPanel) => {
@@ -349,6 +347,7 @@ function customRightMenu(){
       obsRightPanel.disconnect();
     }
   });
+
   // Démarre l'observation sur le body ou un autre conteneur pertinent
     observerRightPanel.observe(document.body, {
       childList: true,
@@ -356,34 +355,20 @@ function customRightMenu(){
     });
 
   // Masquage du bouton de vote
-  document.querySelectorAll('div._1n1uewfl._nz6rewfl')[1].style.display = 'none';
+
+
+  const elementsVote = document.querySelectorAll('div._1n1uewfl._nz6rewfl');
+  if (elementsVote.length > 1) {
+      elementsVote[1].style.display = 'none';
+  }
+
 
   // Masquage du bouton de partage
   const shareButton = document.querySelector('button[data-testid="share-button.ui.pre-share-view.button"]');
   if (shareButton) {
       shareButton.style.display = 'none';
-      //console.log('Bouton "Partager" masqué');
   }
 
-
-
-  // Sélectionner l'ancien SVG à remplacer
-  /*
-  const ancienSVG = document.querySelector('span.css-bwxjrz svg');
-  //console.log('ancien');
-  //console.log(ancienSVG);
-
-  if (ancienSVG) {
-      // Nouveau SVG à insérer
-      const nouveauSVG = `
-          <svg fill="none" viewBox="0 0 16 16" role="presentation" class="_1reo15vq _18m915vq _syaz1r31 _lcxvglyw _s7n4yfq0 _vc881r31 _1bsbutpp _4t3iutpp">
-              <path fill="currentcolor" d="m6.03 1.47 6 6a.75.75 0 0 1 .052 1.004l-.052.056-6 6-1.06-1.06L10.44 8 4.97 2.53z"></path>
-          </svg>
-      `;
-
-      // Remplacer l'ancien SVG par le nouveau
-      ancienSVG.outerHTML = nouveauSVG;
-  }*/
   //masquer Exalate
 
   const wrapperExalate = document.querySelector('[data-testid="issue.views.issue-base.context.ecosystem.connect.field-wrapper"]');
@@ -408,18 +393,27 @@ function customRightMenu(){
     }
   });
 
-  DivImpact.style.marginBottom = '10px';
+
+  if(DivImpact){
+    DivImpact.style.marginBottom = '10px';
+  }
 
   //sous-titre en gras
 
-  const style = document.createElement('style');
-  style.innerHTML = `
-    [data-component-selector="jira-issue-field-heading-field-heading-title"] {
-      font-weight: 700 !important;
 
+  const targetElementBold = document.querySelector('[data-component-selector="jira-issue-field-heading-field-heading-title"]');
+  if (targetElementBold) {
+
+
+
+  const styleBold = document.createElement('style');
+  styleBold.innerHTML = `[data-component-selector="jira-issue-field-heading-field-heading-title"] {
+      font-weight: 700 !important;
     }
   `;
   document.head.appendChild(style);
+
+  }
 
   // bouton de changement de status
 
@@ -445,24 +439,25 @@ function customRightMenu(){
 
   const buttonAutomatisation = document.querySelector('[data-testid="issue.views.issue-base.foundation.status.actions-wrapper"] div.css-1b1skvc');
 
-            if (buttonAutomatisation) {
-                buttonAutomatisation.style.setProperty('background-color', '#312880', 'important');
-                buttonAutomatisation.style.setProperty('color', '#fff', 'important');
-                buttonAutomatisation.style.setProperty('border-radius', '5px', 'important');
-                buttonAutomatisation.style.setProperty('width', '313px', 'important');
-                buttonAutomatisation.style.setProperty('height', '43px', 'important');
-                buttonAutomatisation.style.setProperty('padding-top', '5px', 'important');
-                buttonAutomatisation.style.setProperty('padding-left', '5px', 'important');
-                buttonAutomatisation.style.setProperty('box-shadow', '0px 2px 3px #666', 'important');
+  if (buttonAutomatisation) {
+      buttonAutomatisation.style.setProperty('background-color', '#312880', 'important');
+      buttonAutomatisation.style.setProperty('color', '#fff', 'important');
+      buttonAutomatisation.style.setProperty('border-radius', '5px', 'important');
+      buttonAutomatisation.style.setProperty('width', '313px', 'important');
+      buttonAutomatisation.style.setProperty('height', '43px', 'important');
+      buttonAutomatisation.style.setProperty('padding-top', '5px', 'important');
+      buttonAutomatisation.style.setProperty('padding-left', '5px', 'important');
+      buttonAutomatisation.style.setProperty('box-shadow', '0px 2px 3px #666', 'important');
 
-            }
+  }
 
   const svgIcon = document.querySelector('div.css-1b1skvc svg path');
   if (svgIcon) {
-      svgIcon.style.setProperty('fill', '#fff', 'important'); // orange
+      svgIcon.style.setProperty('fill', '#fff', 'important');
   }
 
   //ajouter le texte automatisation après l'icone
+
   const svgAutomatisation = document.querySelector('div.css-1b1skvc svg');
   if (svgAutomatisation) {
       // Vérifie s'il y a déjà un texte pour éviter les doublons
@@ -504,10 +499,15 @@ function waitForButtonLinkedTickets() {
 }
 //Fonction qui masque des data-testid
 function HideElementWithDataTestID(ElementsList) {
+
 	ElementsList.forEach(testId => {
 	const CardToHide = document.querySelector(`[data-testid="${testId}"]`);
+
+    console.log(CardToHide);
+    console.log(testId);
 		if (CardToHide && CardToHide.getAttribute('data-selected') === 'false') {
-			CardToHide.style.display = 'none';
+			//CardToHide.remove(); // suppression au lieu de display: none
+      CardToHide.style.setProperty('display', 'none', 'important');
 		}
 	});
 }
@@ -527,7 +527,8 @@ function HideElementWithURL(ElementsList) {
                 if (card.style.display === 'none') {
                     //console.log(`Carte contenant "${LinkID}" est déjà masquée`);
                 } else {
-                    card.style.display = 'none';
+                    //card.style.display = 'none';
+                    card.remove();
                     //console.log(`Menu contenant "${LinkID}" masquée`);
                 }
 
