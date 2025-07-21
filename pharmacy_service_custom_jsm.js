@@ -3,11 +3,12 @@
 // @namespace    Violentmonkey Scripts
 // @match        https://galenica.atlassian.net/*
 // @grant        GM_addStyle
-// @version      1.6.2
+// @version      1.6.3
 // @updateURL    https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @downloadURL  https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @description  Intégration locale JS + CSS - 15.07.2025
 // ==/UserScript==
+
 
 (function() {
 
@@ -32,12 +33,23 @@
 //Liste des menus de gauche à masquer
 
 const LeftMenu_MenusToHide_DataTestID = [
-        'NAV4_proj-JSMSP-rprt-container',     			  // Reports
-        'NAV4_proj-JSMSP-views-container',    			  // Views
-        'NAV4_proj-JSMSP-nlog-container',      			  // Customers Logs
-        'NAV4_archived_work_items_JSMSP-container',  	// Archives
-        'NAV4_proj-JSMSP-summary-container' 	        // Summary
+        'NAV4_proj-JSMSP-rprt-container',     			  // Reports JSMSP
+        'NAV4_proj-INC-rprt-container',     			    // Reports INC
+        'NAV4_proj-JSMSP-views-container',    			  // Views JSMSP
+        'NAV4_proj-INC-views-container',    			    // Views INC
+        'NAV4_proj-JSMSP-nlog-container',      			  // Customers Logs JSMSP
+        'NAV4_proj-INC-nlog-container',      			    // Customers Logs INC
+        'NAV4_archived_work_items_JSMSP-container',  	// Archives JSMSP
+        'NAV4_archived_work_items_INC-container',  	  // Archives INC
+        'NAV4_proj-JSMSP-summary-container', 	        // Summary JSMSP
+        'NAV4_proj-INC-summary'                       // Summary INC
 	];
+ const ContentMenu_MenusToHide_DataTestID = [
+        'issue-view-ecosystem.ecosystem-actions-wrapper' //Tempo
+	];
+
+
+
 const LeftMenu_MenusToHide_URL = [
 		'Checklist',
 		'Create issue from template',
@@ -158,10 +170,10 @@ div._ca0qutpp._u5f3utpp._n3tdutpp._19bvutpp._7myae4h9._1sw7nqa1._qgnumuej {
 /* Bouton de status */
 
 ._16qs1pcf button .css-178ag6o{
-  color: #fff;
+  /*color: #fff;*/
 }
 ._16qs1pcf .css-5a6fwh{
-  color: #fff;
+  /*color: #fff;*/
 }
 /* Bouton automation */
 .eDdpIk{
@@ -174,6 +186,11 @@ div._ca0qutpp._u5f3utpp._n3tdutpp._19bvutpp._7myae4h9._1sw7nqa1._qgnumuej {
 .css-1qp4wby{
   display: none;
 }
+/* Bouton status */
+._16qs1pcf button .css-178ag6o{
+  padding-top:5px;
+}
+
 /*======================================
 	Menu de droite - INFOS Pharma
 ======================================*/
@@ -191,6 +208,14 @@ div._ca0qutpp._u5f3utpp._n3tdutpp._19bvutpp._7myae4h9._1sw7nqa1._qgnumuej {
 =================================================================================*/
 function customHeader(){
   //console.log('customHeader');
+
+  //bouton créer
+  const createButton = document.querySelector('[data-testid="atlassian-navigation--create-button"]');
+  if (createButton) {
+    createButton.style.backgroundColor = '#312880'; // bleu par exemple
+    createButton.style.color = '#ffffff'; // texte en blanc
+  }
+
 }
 /*=================================================================================
 	Customisation du Menu de gauche
@@ -217,6 +242,7 @@ function customLeftMenu(){
           HideElementWithName(LeftMenu_MenusToHide_Name);
 
           //LeftMenuDomObserver.disconnect();
+
         }
 
     };
@@ -268,6 +294,40 @@ function customLeftMenu(){
 =================================================================================*/
 function customContent(){
   //console.log('customContent');
+
+
+  //Bouton tempo
+  const ecosystemWrapper = document.querySelector('[data-testid="issue-view-ecosystem.ecosystem-actions-wrapper"]');
+  if (ecosystemWrapper) {
+    ecosystemWrapper.style.display = 'none';
+    //console.log('Élément ecosystem-actions-wrapper masqué');
+  }
+
+  //bouton confluence
+
+  const confluenceButton = document.querySelector('button[aria-haspopup="true"] ._1e0c1o8l svg');
+  if (confluenceButton) {
+    const buttonWrapperConfluence = confluenceButton.closest('button');
+    if (buttonWrapperConfluence) {
+      buttonWrapperConfluence.style.display = 'none';
+      //console.log('Bouton Confluence masqué');
+    }
+  }
+
+
+
+  //Bouton automatisation
+  const clipped = document.querySelector('.css-1b1skvc ._ogto7mnp');
+  if (clipped) {
+    clipped.style.setProperty('clip', 'auto', 'important');
+    clipped.style.setProperty('clip-path', 'none', 'important');
+    clipped.style.setProperty('font-size', '14px', 'important');
+    clipped.style.setProperty('line-height', 'normal', 'important');
+    clipped.style.setProperty('overflow', 'visible', 'important');
+    clipped.style.setProperty('color', '#fff', 'important');
+    clipped.style.setProperty('margin-left', '20px', 'important');
+  }
+
 }
 /*=================================================================================
 	Customisation du Menu de droite
@@ -324,12 +384,124 @@ function customRightMenu(){
       // Remplacer l'ancien SVG par le nouveau
       ancienSVG.outerHTML = nouveauSVG;
   }*/
+  //masquer Exalate
+
+  const wrapperExalate = document.querySelector('[data-testid="issue.views.issue-base.context.ecosystem.connect.field-wrapper"]');
+  if (wrapperExalate) {
+    wrapperExalate.style.display = 'none';
+  }
+
+
+  //Bloc Priority
+  const DivPriority=  document.querySelector('[data-testid="issue.issue-view-layout.issue-view-priority-field.priority"]');
+  const DivImpact =  document.querySelector('[data-testid="ref-spotlight-target-global-spotlight-target-customfield_10504"]');
+  const DivUrgence =  document.querySelector('[data-testid="ref-spotlight-target-global-spotlight-target-customfield_10505"]');
+
+  const BlocPriorityElements = [DivPriority, DivImpact, DivUrgence];
+
+  BlocPriorityElements.forEach(el => {
+    if (el) {
+      el.style.borderRadius = '5px';
+      el.style.backgroundColor = '#FFBBBB';
+      el.style.padding = '12px';
+      el.style.boxShadow = 'var(--ds-shadow-raised, 0 1px 1px #091e4240, 0 0 1px #091e424f)';
+    }
+  });
+
+  DivImpact.style.marginBottom = '10px';
+
+  //sous-titre en gras
+
+  const style = document.createElement('style');
+  style.innerHTML = `
+    [data-component-selector="jira-issue-field-heading-field-heading-title"] {
+      font-weight: 700 !important;
+
+    }
+  `;
+  document.head.appendChild(style);
+
+  // bouton de changement de status
+
+  const buttonChangeStatus = document.querySelector('#issue\\.fields\\.status-view\\.status-button');
+  if (buttonChangeStatus) {
+    buttonChangeStatus.style.setProperty('width', '313px', 'important');
+    buttonChangeStatus.style.setProperty('height', '43px', 'important');
+    buttonChangeStatus.style.setProperty('box-shadow', '0px 2px 3px #666', 'important');
+  }
+
+  // affichage du status centré
+
+  const resolutionBox = document.querySelector('[data-testid="issue.views.issue-base.foundation.status.resolution"]');
+  if (resolutionBox) {
+      resolutionBox.style.setProperty('margin-left', 'auto', 'important');
+      resolutionBox.style.setProperty('margin-right', 'auto', 'important');
+      resolutionBox.style.setProperty('left', '0', 'important');
+      resolutionBox.style.setProperty('position', 'relative', 'important');
+      resolutionBox.style.setProperty('margin-bottom', '10px', 'important');
+  }
+
+  //bouton automatisation
+
+  const buttonAutomatisation = document.querySelector('[data-testid="issue.views.issue-base.foundation.status.actions-wrapper"] div.css-1b1skvc');
+
+            if (buttonAutomatisation) {
+                buttonAutomatisation.style.setProperty('background-color', '#312880', 'important');
+                buttonAutomatisation.style.setProperty('color', '#fff', 'important');
+                buttonAutomatisation.style.setProperty('border-radius', '5px', 'important');
+                buttonAutomatisation.style.setProperty('width', '313px', 'important');
+                buttonAutomatisation.style.setProperty('height', '43px', 'important');
+                buttonAutomatisation.style.setProperty('padding-top', '5px', 'important');
+                buttonAutomatisation.style.setProperty('padding-left', '5px', 'important');
+                buttonAutomatisation.style.setProperty('box-shadow', '0px 2px 3px #666', 'important');
+
+            }
+
+  const svgIcon = document.querySelector('div.css-1b1skvc svg path');
+  if (svgIcon) {
+      svgIcon.style.setProperty('fill', '#fff', 'important'); // orange
+  }
+
+  //ajouter le texte automatisation après l'icone
+  const svgAutomatisation = document.querySelector('div.css-1b1skvc svg');
+  if (svgAutomatisation) {
+      // Vérifie s'il y a déjà un texte pour éviter les doublons
+      const existingText = svgAutomatisation.parentElement.querySelector('.automatisation-text');
+      if (!existingText) {
+
+          const span = document.createElement('span');
+          span.textContent = ' Automatisation';
+          span.className = 'automatisation-text';
+          span.style.setProperty('margin-left', '6px', 'important');
+          span.style.setProperty('font-weight', 'bold', 'important');
+        span.style.setProperty('color', '#fff', 'important');
+          svgAutomatisation.parentElement.appendChild(span);
+      }
+  }
+
+
+
+  waitForButtonLinkedTickets();
 
 
 }
+
 /*=================================================================================
 	Fonctions
 =================================================================================*/
+function waitForButtonLinkedTickets() {
+    const buttonLinkedTickets = document.querySelector('[data-testid="issue-field-cmdb-object.ui.card.button-view-details"]');
+    if (buttonLinkedTickets) {
+        buttonLinkedTickets.style.setProperty('background-color', '#4AD18A', 'important');
+        buttonLinkedTickets.style.setProperty('box-shadow', '0px 2px 3px #666', 'important');
+        //console.log('✅ Bouton trouvé et modifié');
+    } else {
+        //console.log('⏳ Bouton non trouvé, nouvelle tentative...');
+        setTimeout(waitForButtonLinkedTickets, 300);
+    }
+
+    window.addEventListener('load', waitForButtonLinkedTickets);
+}
 //Fonction qui masque des data-testid
 function HideElementWithDataTestID(ElementsList) {
 	ElementsList.forEach(testId => {
@@ -388,7 +560,7 @@ function hideRecentSection() {
         if (heading.textContent.trim() === 'Récents') {
             const section = heading.closest('div[role="group"]');
             if (section) {
-                section.style.display = 'none';
+                //section.style.display = 'none';
                 //console.log('Bloc "Récents" masqué');
             }
         }
@@ -493,9 +665,6 @@ function CheckCustomerExpander(){
         const buttonClient2 = document.querySelector('[data-testid="issue.views.issue-details.issue-layout.right-most-column"] ._1gqnidpf button')
 
 
-        //issue-field-cmdb-object.ui.card.button-view-details
-
-
         //const button = document.querySelector('._1gqnidpf button');
         if (buttonClient2 && buttonClient2.getAttribute('data-testid') !== 'issue-field-cmdb-object.ui.card.button-view-details') {
           //setTimeout(() => {}, 2000);
@@ -504,39 +673,6 @@ function CheckCustomerExpander(){
 
         }
       }
-/*
-
-      const path = document.querySelector('[data-testid="issue.views.issue-details.issue-layout.right-most-column"] ._1gqnidpf span[role="img"] svg path')
-      //console.log(path);
-
-      if (path) {
-        const d = path.getAttribute('d');
-        console.log(path);
-
-        if (d.includes('14.53 6.03')) {
-          console.log("Flèche vers le haut → détails affichés");
-        } else {
-          console.log("Flèche vers le bas → détails masqués");
-
-          const buttonClient = document.querySelector('[data-testid="issue.views.issue-details.issue-layout.right-most-column"] ._1gqnidpf button')
-
-          //const button = document.querySelector('._1gqnidpf button');
-          if (buttonClient) {
-            //setTimeout(() => {}, 5400);
-            //buttonClient.click();
-
-            console.log('Bouton buttonClient cliqué');
-
-              // Affiche la DIV parente ou l'identifiant
-              const parentDiv = buttonClient.closest('div');
-              if (parentDiv) {
-                console.log('DIV parente du bouton cliqué :', parentDiv);
-                console.log('ID de la DIV parente :', parentDiv.id || 'Pas d\'ID');
-              }
-
-          }
-        }
-      }*/
 
   }
 
