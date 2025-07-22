@@ -3,7 +3,7 @@
 // @namespace    Violentmonkey Scripts
 // @match        https://galenica.atlassian.net/*
 // @grant        GM_addStyle
-// @version      1.6.8
+// @version      1.6.9
 // @updateURL    https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @downloadURL  https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @description  Intégration locale JS + CSS - 15.07.2025
@@ -353,8 +353,16 @@ function customRightMenu(){
 
 function customRightMenuHideElements(){
 
-  // Masquage du bouton de vote
+  //fond bleu clair
 
+  const MenuBleuClair = document.querySelector('[data-testid="issue.views.issue-details.issue-layout.container-right"]');
+  if (MenuBleuClair){
+
+    MenuBleuClair.style.setProperty('background-color', '#E9F2FE', 'important');
+
+  }
+
+  // Masquage du bouton de vote
   const elementsVote = document.querySelectorAll('div._1n1uewfl._nz6rewfl');
   if (elementsVote.length > 1) {
       elementsVote[1].style.display = 'none';
@@ -818,3 +826,4 @@ function CheckCustomerExpander(){
 	FIN
 =================================================================================*/
 })();
+
