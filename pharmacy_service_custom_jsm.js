@@ -3,7 +3,7 @@
 // @namespace    Violentmonkey Scripts
 // @match        https://galenica.atlassian.net/*
 // @grant        GM_addStyle
-// @version      1.6.6
+// @version      1.6.7
 // @updateURL    https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @downloadURL  https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @description  Intégration locale JS + CSS - 15.07.2025
@@ -310,7 +310,7 @@ function customContent(){
 
       buttonWrapperConfluence.style.setProperty('display', 'none', 'important');
 
-      console.log('Bouton Confluence masqué');
+      //console.log('Bouton Confluence masqué');
     }
   }
 
@@ -323,7 +323,7 @@ function customRightMenu(){
 	//console.log('customRightMenu');
 
 
-  const panelSelectorRightPanel = '[data-testid="issue.views.issue-details.issue-layout.right-most-column"] ._1gqnidpf'; // ← adapte ce sélecteur si nécessaire
+  const panelSelectorRightPanel = '[data-testid="issue.views.issue-details.issue-layout.right-most-column"] ._1gqnidpf';
 
   const observerRightPanel = new MutationObserver((mutations, obsRightPanel) => {
 
@@ -358,6 +358,7 @@ function customRightMenuHideElements(){
   const elementsVote = document.querySelectorAll('div._1n1uewfl._nz6rewfl');
   if (elementsVote.length > 1) {
       elementsVote[1].style.display = 'none';
+    elementsVote[1].remove();
   }
 
 
@@ -365,6 +366,7 @@ function customRightMenuHideElements(){
   const shareButton = document.querySelector('button[data-testid="share-button.ui.pre-share-view.button"]');
   if (shareButton) {
       shareButton.style.display = 'none';
+      shareButton.remove();
   }
 
   //masquer Exalate
@@ -372,24 +374,28 @@ function customRightMenuHideElements(){
   const wrapperExalate = document.querySelector('[data-testid="issue.views.issue-base.context.ecosystem.connect.field-wrapper"]');
   if (wrapperExalate) {
     wrapperExalate.style.display = 'none';
+    wrapperExalate.remove();
   }
-
 
   //Bloc Priority
   const DivPriority=  document.querySelector('[data-testid="issue.issue-view-layout.issue-view-priority-field.priority"]');
   const DivImpact =  document.querySelector('[data-testid="ref-spotlight-target-global-spotlight-target-customfield_10504"]');
   const DivUrgence =  document.querySelector('[data-testid="ref-spotlight-target-global-spotlight-target-customfield_10505"]');
 
-  const BlocPriorityElements = [DivPriority, DivImpact, DivUrgence];
+  if(DivPriority && DivImpact && DivUrgence){
 
-  BlocPriorityElements.forEach(el => {
-    if (el) {
-      el.style.borderRadius = '5px';
-      el.style.backgroundColor = '#FFBBBB';
-      el.style.padding = '12px';
-      el.style.boxShadow = 'var(--ds-shadow-raised, 0 1px 1px #091e4240, 0 0 1px #091e424f)';
-    }
-  });
+    const BlocPriorityElements = [DivPriority, DivImpact, DivUrgence];
+
+    BlocPriorityElements.forEach(el => {
+      if (el) {
+        el.style.borderRadius = '5px';
+        el.style.backgroundColor = '#FFBBBB';
+        el.style.padding = '12px';
+        el.style.boxShadow = 'var(--ds-shadow-raised, 0 1px 1px #091e4240, 0 0 1px #091e424f)';
+      }
+    });
+  }
+
 
 
   if(DivImpact){
@@ -406,14 +412,15 @@ function customRightMenuHideElements(){
         font-weight: 700 !important;
       }
     `;
-    document.head.appendChild(style);
+    document.head.appendChild(styleBold);
 
   }
 
-  // bouton de changement de status
 
+  // bouton de changement de status
   waitForStatusButton();
 
+  // bouton status style
 
 
 
@@ -429,13 +436,15 @@ function customRightMenuHideElements(){
   }
 
   //bouton automatisation
-
   waitForAutomatisationButton();
 
-
-
-
+  //bouton de tickets liés
   waitForButtonLinkedTickets();
+
+
+  window.addEventListener('load', waitForAutomatisationButton);
+  window.addEventListener('load', waitForButtonLinkedTickets);
+
 
 }
 
@@ -447,10 +456,21 @@ function waitForStatusButton() {
     const button = document.querySelector('#issue\\.fields\\.status-view\\.status-button');
     if (button) {
       //console.log('✅ Bouton trouvé');
-      button.style.setProperty('width', '313px', 'important');
+      //button.style.setProperty('width', '313px', 'important');
       button.style.setProperty('height', '43px', 'important');
       button.style.setProperty('box-shadow', '0px 2px 3px #666', 'important');
+
+      const StatusButtonContainer = document.querySelector('[data-testid="issue.views.issue-base.foundation.status.status-field-wrapper"]');
+
+      if (StatusButtonContainer){
+
+        StatusButtonContainer.style.setProperty('width', '100%', 'important');
+        StatusButtonContainer.style.setProperty('margin-right', '0px', 'important');
+
+      }
+
       observer.disconnect(); // Arrête l'observation une fois trouvé
+
     }
   });
 
@@ -465,17 +485,33 @@ function waitForAutomatisationButton() {
     const button = document.querySelector('[data-testid="issue.views.issue-base.foundation.status.actions-wrapper"] div.css-1b1skvc');
     if (!button) return;
 
-    //console.log('✅ Bouton trouvé');
+    const AutomatisationButtonContainer = document.querySelector('[data-testid="issue.views.issue-base.foundation.status.actions-wrapper"]');
+    if (AutomatisationButtonContainer) {
+      AutomatisationButtonContainer.style.setProperty('width', '100%', 'important');
+      AutomatisationButtonContainer.style.setProperty('margin-right', '0px', 'important');
+      AutomatisationButtonContainer.style.setProperty('display', 'flex', 'important');
+      AutomatisationButtonContainer.style.setProperty('align-items', 'center', 'important');
+      AutomatisationButtonContainer.style.setProperty('justify-content', 'center', 'important');
+    }
+    const AutomatisationButtonButton = document.querySelector('[data-testid="issue.views.issue-base.foundation.status.actions-wrapper"] button');
 
-    // Appliquer les styles
+    if(AutomatisationButtonButton){
+
+        AutomatisationButtonButton.style.setProperty('left', '-70px', 'important');
+
+    }
+
+    // Appliquer les styles au bouton
     button.style.setProperty('background-color', '#312880', 'important');
     button.style.setProperty('color', '#fff', 'important');
     button.style.setProperty('border-radius', '5px', 'important');
-    button.style.setProperty('width', '313px', 'important');
+    button.style.setProperty('width', '100%', 'important');
     button.style.setProperty('height', '43px', 'important');
-    button.style.setProperty('padding-top', '5px', 'important');
-    button.style.setProperty('padding-left', '5px', 'important');
-    button.style.setProperty('box-shadow', '0px 2px 3px #666', 'important');
+    button.style.setProperty('padding', '0 10px', 'important');
+    button.style.setProperty('display', 'flex', 'important');
+    button.style.setProperty('align-items', 'center', 'important');
+    button.style.setProperty('justify-content', 'center', 'important');
+    button.style.setProperty('gap', '6px', 'important'); // espace entre icône et texte
 
     // Icône SVG
     const svgIcon = button.querySelector('svg path');
@@ -486,22 +522,22 @@ function waitForAutomatisationButton() {
     // Ajouter le texte "Automatisation"
     const svgAutomatisation = button.querySelector('svg');
     if (svgAutomatisation) {
-      const existingText = svgAutomatisation.parentElement.querySelector('.automatisation-text');
-      if (!existingText) {
+      const existingText = button.querySelector('.automatisation-text');
+      if (!existingText && !button.textContent.includes('Automatisation')) {
         const span = document.createElement('span');
-        span.textContent = ' Automatisation';
+        span.textContent = 'Automatisation';
         span.className = 'automatisation-text';
-        span.style.setProperty('margin-left', '6px', 'important');
         span.style.setProperty('font-weight', 'bold', 'important');
         span.style.setProperty('color', '#fff', 'important');
-        svgAutomatisation.parentElement.appendChild(span);
+        span.style.setProperty('white-space', 'nowrap', 'important');
+        button.appendChild(span);
       }
     }
 
-    //Bouton automatisation
+    // Bouton automatisation (texte masqué par défaut)
     const clipped = document.querySelector('.css-1b1skvc ._ogto7mnp');
     if (clipped) {
-      clipped.style.setProperty('clip', 'auto', 'important');
+      clipped.style.setProperty('clip', 'unset', 'important');
       clipped.style.setProperty('clip-path', 'none', 'important');
       clipped.style.setProperty('font-size', '14px', 'important');
       clipped.style.setProperty('line-height', 'normal', 'important');
@@ -510,7 +546,7 @@ function waitForAutomatisationButton() {
       clipped.style.setProperty('margin-left', '20px', 'important');
     }
 
-    observer.disconnect(); // Arrêter l'observation
+    observer.disconnect();
   });
 
   observer.observe(document.body, {
@@ -522,11 +558,27 @@ function waitForAutomatisationButton() {
 
 
 
+
 /*=================================================================================
 	Fonctions
 =================================================================================*/
 function waitForButtonLinkedTickets() {
-    const buttonLinkedTickets = document.querySelector('[data-testid="issue-field-cmdb-object.ui.card.button-view-details"]');
+
+  const buttonsLinkedTickets = document.querySelectorAll('.css-32hz2l [data-testid="issue-field-cmdb-object.ui.card.button-view-details"]');
+  if (buttonsLinkedTickets.length > 0) {
+    buttonsLinkedTickets.forEach(button => {
+      button.style.setProperty('background-color', '#4AD18A', 'important');
+      button.style.setProperty('box-shadow', '0px 2px 3px #666', 'important');
+    });
+    // console.log('✅ Boutons trouvés et modifiés');
+  } else {
+    // console.log('⏳ Boutons non trouvés, nouvelle tentative...');
+    setTimeout(waitForButtonLinkedTickets, 300);
+
+  }
+
+  /*
+    const buttonLinkedTickets = document.querySelector('.css-32hz2l [data-testid="issue-field-cmdb-object.ui.card.button-view-details"]');
     if (buttonLinkedTickets) {
         buttonLinkedTickets.style.setProperty('background-color', '#4AD18A', 'important');
         buttonLinkedTickets.style.setProperty('box-shadow', '0px 2px 3px #666', 'important');
@@ -535,8 +587,7 @@ function waitForButtonLinkedTickets() {
         //console.log('⏳ Bouton non trouvé, nouvelle tentative...');
         setTimeout(waitForButtonLinkedTickets, 300);
     }
-
-    window.addEventListener('load', waitForButtonLinkedTickets);
+*/
 }
 //Fonction qui masque des data-testid
 function HideElementWithDataTestID(ElementsList) {
@@ -746,5 +797,4 @@ function CheckCustomerExpander(){
 	FIN
 =================================================================================*/
 })();
-
 
