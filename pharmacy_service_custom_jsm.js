@@ -3,7 +3,7 @@
 // @namespace    Violentmonkey Scripts
 // @match        https://galenica.atlassian.net/*
 // @grant        GM_addStyle
-// @version      1.6.7
+// @version      1.6.8
 // @updateURL    https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @downloadURL  https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @description  Intégration locale JS + CSS - 15.07.2025
@@ -425,15 +425,7 @@ function customRightMenuHideElements(){
 
 
   // affichage du status centré
-
-  const resolutionBox = document.querySelector('[data-testid="issue.views.issue-base.foundation.status.resolution"]');
-  if (resolutionBox) {
-      resolutionBox.style.setProperty('margin-left', 'auto', 'important');
-      resolutionBox.style.setProperty('margin-right', 'auto', 'important');
-      resolutionBox.style.setProperty('left', '0', 'important');
-      resolutionBox.style.setProperty('position', 'relative', 'important');
-      resolutionBox.style.setProperty('margin-bottom', '10px', 'important');
-  }
+  waitForResolutionButton();
 
   //bouton automatisation
   waitForAutomatisationButton();
@@ -446,6 +438,35 @@ function customRightMenuHideElements(){
   window.addEventListener('load', waitForButtonLinkedTickets);
 
 
+}
+function waitForResolutionButton() {
+
+  //fonction pour modifier le bouton de status
+  const observer = new MutationObserver(() => {
+
+    const resolutionBox = document.querySelector('[data-testid="issue.views.issue-base.foundation.status.resolution"]');
+    if (resolutionBox) {
+
+      resolutionBox.style.setProperty('margin-left', 'auto', 'important');
+      resolutionBox.style.setProperty('margin-right', 'auto', 'important');
+      resolutionBox.style.setProperty('display', 'flex', 'important');
+      resolutionBox.style.setProperty('align-items', 'center', 'important');
+      resolutionBox.style.setProperty('justify-content', 'center', 'important');
+
+      resolutionBox.style.setProperty('width', '100%', 'important');
+      resolutionBox.style.setProperty('left', '0', 'important');
+      resolutionBox.style.setProperty('position', 'relative', 'important');
+      resolutionBox.style.setProperty('margin-bottom', '10px', 'important');
+
+      observer.disconnect(); // Arrête l'observation une fois trouvé
+
+    }
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
 }
 
 
@@ -797,4 +818,3 @@ function CheckCustomerExpander(){
 	FIN
 =================================================================================*/
 })();
-
