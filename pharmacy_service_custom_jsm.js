@@ -3,7 +3,7 @@
 // @namespace    Violentmonkey Scripts
 // @match        https://galenica.atlassian.net/*
 // @grant        GM_addStyle
-// @version      1.6.9
+// @version      1.7.0
 // @updateURL    https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @downloadURL  https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @description  Intégration locale JS + CSS - 15.07.2025
@@ -385,30 +385,7 @@ function customRightMenuHideElements(){
     wrapperExalate.remove();
   }
 
-  //Bloc Priority
-  const DivPriority=  document.querySelector('[data-testid="issue.issue-view-layout.issue-view-priority-field.priority"]');
-  const DivImpact =  document.querySelector('[data-testid="ref-spotlight-target-global-spotlight-target-customfield_10504"]');
-  const DivUrgence =  document.querySelector('[data-testid="ref-spotlight-target-global-spotlight-target-customfield_10505"]');
-
-  if(DivPriority && DivImpact && DivUrgence){
-
-    const BlocPriorityElements = [DivPriority, DivImpact, DivUrgence];
-
-    BlocPriorityElements.forEach(el => {
-      if (el) {
-        el.style.borderRadius = '5px';
-        el.style.backgroundColor = '#FFBBBB';
-        el.style.padding = '12px';
-        el.style.boxShadow = 'var(--ds-shadow-raised, 0 1px 1px #091e4240, 0 0 1px #091e424f)';
-      }
-    });
-  }
-
-
-
-  if(DivImpact){
-    DivImpact.style.marginBottom = '10px';
-  }
+  waitForPriorityFields();
 
   //sous-titre en gras
 
@@ -447,6 +424,41 @@ function customRightMenuHideElements(){
 
 
 }
+
+function waitForPriorityFields() {
+  const observer = new MutationObserver(() => {
+    const DivPriority = document.querySelector('[data-testid="issue.issue-view-layout.issue-view-priority-field.priority"]');
+    const DivImpact   = document.querySelector('[data-testid="issue.issue-view-layout.issue-view-single-select-field.customfield_10504"]');
+    const DivUrgence  = document.querySelector('[data-testid="issue.issue-view-layout.issue-view-single-select-field.customfield_10505"]');
+
+    const BlocPriorityElements = [DivPriority, DivImpact, DivUrgence];
+
+    BlocPriorityElements.forEach(el => {
+      if (el) {
+        el.style.borderRadius = '5px';
+        el.style.backgroundColor = '#FFBBBB';
+        el.style.padding = '12px';
+        el.style.boxShadow = 'var(--ds-shadow-raised, 0 1px 1px #091e4240, 0 0 1px #091e424f)';
+      }
+    });
+
+    if (DivImpact) {
+      DivImpact.style.marginBottom = '10px';
+    }
+
+    // Arrête l'observation une fois les éléments trouvés
+    if (DivPriority && DivImpact && DivUrgence) {
+      observer.disconnect();
+    }
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+}
+
+
 function waitForResolutionButton() {
 
   //fonction pour modifier le bouton de status
@@ -826,4 +838,3 @@ function CheckCustomerExpander(){
 	FIN
 =================================================================================*/
 })();
-
