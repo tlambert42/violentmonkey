@@ -3,7 +3,7 @@
 // @namespace    Violentmonkey Scripts
 // @match        https://galenica.atlassian.net/*
 // @grant        GM_addStyle
-// @version      1.7.0
+// @version      1.7.1
 // @updateURL    https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @downloadURL  https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @description  Intégration locale JS + CSS - 15.07.2025
@@ -55,7 +55,8 @@ const LeftMenu_MenusToHide_URL = [
 		'demandes de service',
     "tempo-project-centric-timesheet-panel",          // Timesheet
     "ic-templates-page-checklist",                     //Checklist
-    "jql-search-extensions-extended-search-project-settings" // Extended search
+    "jql-search-extensions-extended-search-project-settings" ,// Extended search
+    "JSMSP?selectedItem=com.atlassian.plugins.atlassian-connect-plugin:com.xpandit.plugins.xray__project-reporting-center" //Test
 
 	];
 const LeftMenu_MenusToHide_Name = [
@@ -203,7 +204,7 @@ div._ca0qutpp._u5f3utpp._n3tdutpp._19bvutpp._7myae4h9._1sw7nqa1._qgnumuej {
 ======================================*/
 ._16qszucj{
   background-color:#d5efe2;
-  box-shadow:0px 1px 3px #076837;
+  box-shadow:0px 1px 3px #076837 !important;
 
 }
 
@@ -336,6 +337,8 @@ function customRightMenu(){
       AddLinkToPhoneNumber();
       HideElementWithDataTestID(ContentMenu_MenusToHide_DataTestID);
 
+      customComponentBloc();
+
       // Une fois trouvé, on peut arrêter l'observation si ce n'est plus nécessaire
       obsRightPanel.disconnect();
     }
@@ -347,9 +350,22 @@ function customRightMenu(){
       subtree: true
     });
 
+
+
   customRightMenuHideElements();
 
 }
+function customComponentBloc (){
+
+  const BlocComponent = document.querySelector('[data-testid="issue.views.field.select.common.select-inline-edit.components"]');
+  if (BlocComponent) {
+    BlocComponent.style.backgroundColor = '#E9D6EF'; // vert par exemple
+    BlocComponent.style.setProperty('box-shadow', '0px 1px 3px #076837', 'important');
+    BlocComponent.style.setProperty('padding', '10px 10px 10px 10px', 'important');
+  }
+
+}
+
 
 function customRightMenuHideElements(){
 
@@ -701,6 +717,13 @@ function hideRecentSection() {
             }
         }
     });
+console.log('test TLA 3');
+    const RecentProject = document.querySelector('div[role="group"][aria-labelledby=":ren:-heading"]');
+    if (RecentProject) {
+        console.log('test TLA');
+        RecentProject.style.display = 'none';
+    }
+
 }
 
 
