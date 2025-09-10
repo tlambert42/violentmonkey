@@ -3,7 +3,7 @@
 // @namespace    Violentmonkey Scripts
 // @match        https://galenica.atlassian.net/*
 // @grant        GM_addStyle
-// @version      1.7.2
+// @version      1.7.5
 // @updateURL    https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @downloadURL  https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @description  Intégration locale JS + CSS - 15.07.2025
@@ -139,45 +139,7 @@ div._ca0qutpp._u5f3utpp._n3tdutpp._19bvutpp._7myae4h9._1sw7nqa1._qgnumuej {
 ._ca0qxy5q{
   padding-top:0px !important;
 }
-#comment-editor-container-tabs-1{/*
-  background-color:#d5efe2 !important;
-  color:#44546f;
-  font-weight:bold;
-  box-shadow:0px 1px 3px #076837 !important;
-*/
-}
-/*======================================
-	Formulaire de création de ticket
-======================================*/
 
-
-#customfield_10655-container{
-  display:none !important;
-}
-#customfield_10654-container{
-  display:none !important;
-}
-#customfield_10689-container{
-  display:none !important;
-}
-#customfield_11135-container{
-  display:none !important;
-}
-#customfield_11134-container{
-  display:none !important;
-}
-.css-gh32ph{
-  display:none !important;
-}
-.css-1gou9i3{
-  display:none !important;
-}
-#issue-type-picker-_rm9_-helper{
-  display:none !important;
-}
-#issue-type-picker-_rft_-helper{
-    display:none !important;
-}
 /*======================================
 	Menu de droite
 ======================================*/
@@ -323,7 +285,7 @@ function customLeftMenu() {
     });
 
     LeftMenuFindAndObserve();
-    //hideRecentSection();
+    hideRecentSection();
 }
 
 /*=================================================================================
@@ -353,50 +315,7 @@ function customContent(){
     }
   }
 
-  //Bouton de commentaire
-
-
-
-  // Exécution initiale
-  document.addEventListener("DOMContentLoaded", CustomBoutonComment);
-
-  // Observer les changements dynamiques (SPA)
-  const observer = new MutationObserver(CustomBoutonComment);
-  observer.observe(document.body, { childList: true, subtree: true });
 }
-
-
-function CustomBoutonComment() {
-
-  const BtnCommentText = [
-        "Répondre au client",      // Français
-        "Reply to customer",       // Anglais
-        "Antworten",               // Allemand
-        "Rispondere al cliente"    // Italien
-        ];
-
-        const boutons = document.querySelectorAll('button.css-1u9pfsa');
-        boutons.forEach(boutonComment => {
-            const span = boutonComment.querySelector('span.css-178ag6o');
-
-            if (span) {
-
-                const texteComment = span.textContent.trim();
-
-                if (BtnCommentText.includes(texteComment)) {
-
-                    boutonComment.style.setProperty('background-color','#d5efe2','important');
-                    boutonComment.style.setProperty('box-shadow', '0px 1px 3px #076837', 'important');
-                    boutonComment.style.setProperty('color', '#44546f', 'important');
-                    boutonComment.style.setProperty('font-weight', 'bold', 'important');
-
-                  //bubu
-
-                }
-            }
-        });
-    }
-
 
 /*=================================================================================
 	Customisation du Menu de droite
@@ -420,10 +339,6 @@ function customRightMenu(){
 
       customComponentBloc();
 
-
-
-      customRightMenuHideElements();
-
       // Une fois trouvé, on peut arrêter l'observation si ce n'est plus nécessaire
       obsRightPanel.disconnect();
     }
@@ -436,6 +351,8 @@ function customRightMenu(){
     });
 
 
+
+  customRightMenuHideElements();
 
 }
 function customComponentBloc (){
@@ -474,15 +391,6 @@ function customRightMenuHideElements(){
   if (shareButton) {
       shareButton.style.display = 'none';
       shareButton.remove();
-  }
-
-  // Masquage du bloc move count
-  const blocMoveCount = document.querySelector('[data-testid="issue.issue-view-layout.issue-view-number-field.customfield_11135"]');
-
-  if (blocMoveCount) {
-
-      blocMoveCount.style.display = 'none';
-      blocMoveCount.remove();
   }
 
   //masquer Exalate
@@ -809,6 +717,7 @@ function hideRecentSection() {
             }
         }
     });
+console.log('test TLA 3');
     const RecentProject = document.querySelector('div[role="group"][aria-labelledby=":ren:-heading"]');
     if (RecentProject) {
         console.log('test TLA');
