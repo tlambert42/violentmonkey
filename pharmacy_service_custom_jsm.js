@@ -3,7 +3,7 @@
 // @namespace    Violentmonkey Scripts
 // @match        https://galenica.atlassian.net/*
 // @grant        GM_addStyle
-// @version      1.7.5
+// @version      1.7.6
 // @updateURL    https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @downloadURL  https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @description  Intégration locale JS + CSS - 15.07.2025
@@ -97,9 +97,10 @@ function customCSS(){
 	Navigation du haut
 ======================================*/
 
-header._nd5l8cbt._zulpu2gc._18zrutpp._179rzgxb._1e0c11p5._yv0e1mfv._4cvr1h6o._bfhkvuon._vchhusvi._4t3i1dgc._152t1nws._kqsw1if8._1pbyegat._d6vu1bgi._1j8b18ax {
+header._nd5l8cbt._zulpu2gc._18zrutpp._179rzgxb._1e0c11p5._yv0e1mfv._4cvr1h6o._bfhkvuon._vchhusvi._4t3i1dgc._152t1nws._kqsw1if8._1pbyegat._d6vu1bgi._1j8b18ax {}
+#_r0_{
   border-bottom:1px solid #1868DB;
-  background-color: #69A5EB;
+  background-color: #AECFFB;
 
 }
 /*======================================
@@ -309,7 +310,7 @@ function customContent(){
     if (buttonWrapperConfluence) {
      // buttonWrapperConfluence.style.display = 'none';
 
-      buttonWrapperConfluence.style.setProperty('display', 'none', 'important');
+      //buttonWrapperConfluence.style.setProperty('display', 'none', 'important');
 
       //console.log('Bouton Confluence masqué');
     }
