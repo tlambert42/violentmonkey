@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Jira Pharma Enhancer
+// @name         Jira Pharma Enhancer 22
 // @namespace    Violentmonkey Scripts
 // @match        https://galenica.atlassian.net/*
 // @grant        GM_addStyle
-// @version      2.0.1
+// @version      2.0.2
 // @updateURL    https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @downloadURL  https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @description  Intégration locale JS + CSS - 24.11.2025
@@ -229,8 +229,8 @@ function custom_MiddleBloc(){
   if (UnderNavigation){
     UnderNavigation.style.setProperty('position', 'relative', 'important');
     UnderNavigation.style.setProperty('z-index', '1', 'important');
-    UnderNavigation.style.setProperty('top', '-50px', 'important');
-    UnderNavigation.style.setProperty('height', 'calc(100% + 50px)', 'important');
+    UnderNavigation.style.setProperty('top', '0px', 'important');
+    UnderNavigation.style.setProperty('height', 'calc(100% + 0px)', 'important');
 
   }
 
@@ -288,6 +288,18 @@ function custom_RightBloc_Under_Functions(){
     RightMenuBleuClair.style.setProperty('height', 'calc(100%)', 'important');
 
   }
+
+  //const RightMenuHeaderBleuClair = document.querySelector('[data-testid="issue-view-sticky-header-container.sticky-header"]');
+  const RightMenuHeaderBleuClair = document.getElementById('jira-issue-header-actions');
+
+  if (RightMenuHeaderBleuClair){
+
+    RightMenuHeaderBleuClair.style.setProperty('background-color', Color_Blue_Light, 'important');
+
+  }
+  
+
+
 
   //Bloc SLA
   applyStyleBloc("issue-view-layout-templates-views.ui.context.visible-hidden.ui.context-group.container.sla-group");
