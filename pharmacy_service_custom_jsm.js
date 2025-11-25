@@ -3,7 +3,7 @@
 // @namespace    Violentmonkey Scripts
 // @match        https://galenica.atlassian.net/*
 // @grant        GM_addStyle
-// @version      2.0.0
+// @version      2.0.1
 // @updateURL    https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @downloadURL  https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @description  Intégration locale JS + CSS - 24.11.2025
@@ -229,8 +229,8 @@ function custom_MiddleBloc(){
   if (UnderNavigation){
     UnderNavigation.style.setProperty('position', 'relative', 'important');
     UnderNavigation.style.setProperty('z-index', '1', 'important');
-    UnderNavigation.style.setProperty('top', '-64px', 'important');
-    UnderNavigation.style.setProperty('height', 'calc(100% + 64px)', 'important');
+    UnderNavigation.style.setProperty('top', '-50px', 'important');
+    UnderNavigation.style.setProperty('height', 'calc(100% + 50px)', 'important');
 
   }
 
@@ -284,8 +284,8 @@ function custom_RightBloc_Under_Functions(){
     RightMenuBleuClair.style.setProperty('padding-left', '23px', 'important');
 
     RightMenuBleuClair.style.setProperty('position', 'relative', 'important');
-    RightMenuBleuClair.style.setProperty('top', '-50px', 'important');
-    RightMenuBleuClair.style.setProperty('height', 'calc(100% + 50px)', 'important');
+    RightMenuBleuClair.style.setProperty('top', '0px', 'important');
+    RightMenuBleuClair.style.setProperty('height', 'calc(100%)', 'important');
 
   }
 
