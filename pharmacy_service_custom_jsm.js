@@ -3,7 +3,7 @@
 // @namespace    Violentmonkey Scripts
 // @match        https://galenica.atlassian.net/*
 // @grant        GM_addStyle
-// @version      2.0.2
+// @version      2.0.3
 // @updateURL    https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @downloadURL  https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @description  Intégration locale JS + CSS - 24.11.2025
@@ -46,6 +46,8 @@ const Color_Red_Dark    = "#750000";
 
 const Color_White       = "#FFFFFF";
 const Color_Grey_Dark   = "#666";
+
+const autoClickEnabled = 1;
 /*=================================================================================
 	STEP 01 - Fonctions Globales
 =================================================================================*/
@@ -145,7 +147,6 @@ function custom_Header(){
     const Button_Rovo_spans = Button_Rovo.querySelectorAll('span');
     for (const sp of Button_Rovo_spans) {
 
-      console.log('test tla');
       sp.style.setProperty('color', Color_White, 'important');
       sp.style.setProperty('margin-top', '-2px', 'important');
       sp.style.setProperty('margin-bottom', '0px', 'important');
@@ -297,7 +298,7 @@ function custom_RightBloc_Under_Functions(){
     RightMenuHeaderBleuClair.style.setProperty('background-color', Color_Blue_Light, 'important');
 
   }
-  
+
 
 
 
@@ -308,8 +309,9 @@ function custom_RightBloc_Under_Functions(){
   applyStyleBloc("issue-view-layout-templates-views.ui.context.visible-hidden.ui.context-group.container.details-group");
 
 
+
   CheckCustomerExpander("issue-field-cmdb-object-lazy.ui.card.cmdb-object-card");
-  OpenCustomerExpander();
+ // OpenCustomerExpander();
 
   //Sous-Bloc Reporter
   styleReporterBlocWithObserver();
@@ -365,12 +367,16 @@ function waitForPriorityFields() {
     subtree: true
   });
 }
+
+
 function styleReporterBlocWithObserver() {
+
   const container = document.querySelector('[data-testid="issue.views.issue-details.issue-layout.container-right"]');
+
   if (!container) return;
 
   const obs = new MutationObserver(() => {
-    const ReporterBloc = document.querySelector('[data-testid="issue-field-cmdb-object-lazy.ui.card.cmdb-object-card"]');
+    const ReporterBloc = container.querySelector('[data-testid="issue-field-cmdb-object-lazy.ui.card.cmdb-object-card"]');
     if (ReporterBloc) {
       console.log("Bloc trouvé, style appliqué !");
       ReporterBloc.style.setProperty('background-color', Color_Green_Light, 'important');
@@ -475,6 +481,7 @@ function CheckCustomerExpander(testid){
     //const button3RightPanel = document.querySelector('[data-testid="issue.views.issue-details.issue-layout.right-most-column"] ._1gqnidpf button');
     if (buttonRightPanel) {
       attachClickListener(testid);
+      OpenCustomerExpander();
 
       observerRightPanelButton.disconnect(); // on arrête l'observation une fois le bouton trouvé
     }
@@ -540,7 +547,12 @@ function attachClickListener(testid) {
 }*/
 
 function attachClickListener(testid) {
-  const btn = document.querySelector(`[data-testid="${testid}"] button`);
+
+  const ColumnRightMaint = document.querySelector('[data-testid="issue.views.issue-details.issue-layout.right-most-column"]');
+
+  //issue-field-cmdb-object-lazy.ui.card.cmdb-object-card
+
+  const btn = ColumnRightMaint.querySelector(`[data-testid="${testid}"] button`);
   if (!btn) return;
 
   if (!btn.dataset.clickBound) {
@@ -548,20 +560,22 @@ function attachClickListener(testid) {
     btn.dataset.clickBound = "1";  // garde
   }
 
-  const element = document.querySelector('._t9ec1sub');
+  const element = ColumnRightMaint.querySelector('._t9ec1sub');
 
-      if (element && isRotated180(element)) {
-        //const buttonClient2 = document.querySelector('[data-testid="issue.views.issue-details.issue-layout.right-most-column"] ._1gqnidpf button')
+  //const element = btn;
 
+  if (element && isRotated180(element)) {
+    //const buttonClient2 = document.querySelector('[data-testid="issue.views.issue-details.issue-layout.right-most-column"] ._1gqnidpf button')
 
-        //const button = document.querySelector('._1gqnidpf button');
-        if (btn && btn.getAttribute('data-testid') !== 'issue-field-cmdb-object.ui.card.button-view-details') {
-          //setTimeout(() => {}, 2000);
-          btn.click();
-          //console.log('Bouton buttonClient2 cliqué');
+    //if (btn && btn.getAttribute('data-testid') !== 'issue-field-cmdb-object.ui.card.button-view-details') {
+    if(btn){
 
-        }
-      }
+      //setTimeout(() => {}, 2000);
+      //btn.click();
+      console.log('Bouton buttonClient2 cliqué');
+
+    }
+  }
 
 
 }
