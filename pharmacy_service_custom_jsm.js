@@ -3,7 +3,7 @@
 // @namespace    Violentmonkey Scripts
 // @match        https://galenica.atlassian.net/*
 // @grant        GM_addStyle
-// @version      2.0.3
+// @version      2.0.5
 // @updateURL    https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @downloadURL  https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @description  Intégration locale JS + CSS - 24.11.2025
@@ -175,7 +175,7 @@ function custom_LeftBloc(){
     LeftMenuBleuClair.style.setProperty('border-width', '1px', 'important');
     LeftMenuBleuClair.style.setProperty('border-right-style', 'solid', 'important');
 
-    LeftMenuBleuClair.style.setProperty('height', '100%', 'important');
+    LeftMenuBleuClair.style.setProperty('height', 'calc(100%)', 'important');
 
   }
 
@@ -231,9 +231,15 @@ function custom_MiddleBloc(){
     UnderNavigation.style.setProperty('position', 'relative', 'important');
     UnderNavigation.style.setProperty('z-index', '1', 'important');
     UnderNavigation.style.setProperty('top', '0px', 'important');
-    UnderNavigation.style.setProperty('height', 'calc(100% + 0px)', 'important');
+    UnderNavigation.style.setProperty('height', 'calc(100%)', 'important');
 
   }
+
+  const UnderNavigationRootline = document.querySelector('[data-vc="issue-app-container"]');
+        if (UnderNavigationRootline) {
+            UnderNavigationRootline.style.setProperty('padding-top', '0px', 'important');
+            UnderNavigationRootline.style.setProperty('margin-top', '-32px', 'important');
+        }
 
 }
 /*=================================================================================
@@ -311,6 +317,9 @@ function custom_RightBloc_Under_Functions(){
 
 
   CheckCustomerExpander("issue-field-cmdb-object-lazy.ui.card.cmdb-object-card");
+
+  //CheckCustomerExpander("issue.views.issue-details.issue-layout.right-most-column]");
+
  // OpenCustomerExpander();
 
   //Sous-Bloc Reporter
@@ -487,7 +496,10 @@ function CheckCustomerExpander(testid){
     }
   });
 
-  observerRightPanelButton.observe(document.body, { childList: true, subtree: true });
+  const PanelToCheck = document.querySelector('[data-testid="issue.views.issue-details.issue-layout.right-most-column"]');
+
+  observerRightPanelButton.observe(PanelToCheck, { childList: true, subtree: true });
+  //observerRightPanelButton.observe(document.body, { childList: true, subtree: true });
 
 }
 
@@ -552,7 +564,7 @@ function attachClickListener(testid) {
 
   //issue-field-cmdb-object-lazy.ui.card.cmdb-object-card
 
-  const btn = ColumnRightMaint.querySelector(`[data-testid="${testid}"] button`);
+  const btn = ColumnRightMaint.querySelector(`[data-testid="${testid}"]  button`);
   if (!btn) return;
 
   if (!btn.dataset.clickBound) {
@@ -560,18 +572,20 @@ function attachClickListener(testid) {
     btn.dataset.clickBound = "1";  // garde
   }
 
-  const element = ColumnRightMaint.querySelector('._t9ec1sub');
+  //const element = ColumnRightMaint.querySelector('._t9ec1sub');
+
+  const element = ColumnRightMaint.querySelector('._v5641hdd._t9ec1sub');
 
   //const element = btn;
 
   if (element && isRotated180(element)) {
     //const buttonClient2 = document.querySelector('[data-testid="issue.views.issue-details.issue-layout.right-most-column"] ._1gqnidpf button')
 
-    //if (btn && btn.getAttribute('data-testid') !== 'issue-field-cmdb-object.ui.card.button-view-details') {
-    if(btn){
+    if (btn && btn.getAttribute('data-testid') !== 'issue-field-cmdb-object.ui.card.button-view-details') {
+    //if(btn){
 
       //setTimeout(() => {}, 2000);
-      //btn.click();
+      btn.click();
       console.log('Bouton buttonClient2 cliqué');
 
     }
