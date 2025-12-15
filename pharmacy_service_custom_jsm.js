@@ -3,7 +3,7 @@
 // @namespace    Violentmonkey Scripts
 // @match        https://galenica.atlassian.net/*
 // @grant        GM_addStyle
-// @version      2.0.5
+// @version      2.0.6
 // @updateURL    https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @downloadURL  https://raw.githubusercontent.com/tlambert42/violentmonkey/main/pharmacy_service_custom_jsm.js
 // @description  Intégration locale JS + CSS - 24.11.2025
@@ -20,7 +20,7 @@
 
   !!! ATTENTION A NE PAS UTILISER DE CLASSE CSS CAR CELA CHANGE SOUVENT
 
-	STEP 00 - Définition des couleurs
+  STEP 00 - Définition des couleurs
   STEP 01 - Fonctions Globales
 
   STEP 02 - Custom Header
@@ -697,3 +697,4 @@ function HideElementWithName(ElementsList) {
 	FIN
 =================================================================================*/
 })();
+
